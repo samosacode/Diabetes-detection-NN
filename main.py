@@ -18,8 +18,8 @@ B3 = data["B3"]
 def activation(x):  
 	return np.maximum(0,x)  
 	  
-def softmax(x):  
-	x = x - np.max(x)  
+def softmax(x):
+	x = x - np.max(x)
 	return np.exp(x) / np.sum(np.exp(x))  
   
 def forward_pass(I):  
@@ -42,12 +42,9 @@ age = int(input("age: "))
 
 dataset = np.array([pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, pedigree, age])
 
-normalisation_vector = np.array([4.0, 90.0, 80.0, 20.0, 85.0, 22.0, 0.25, 25.0])
-dataset /= normalisation_vector
+normalisation_vector = data["normalisation_vector"]
+dataset /= normalisation_vector[:8]
 
 result = forward_pass(dataset)
-if result[0] < result[1]:
-  print("diabetic")
-else:
-  print("non diabetic")
+print(f"Non-diabetic: {result[0]*100:.1f}%,  Diabetic: {result[1]*100:.1f}%")
   

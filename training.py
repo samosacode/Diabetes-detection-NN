@@ -5,25 +5,25 @@ import random as rnd
 #stuff needed   
 SIZE = [8,32,32,2]  
 
-"""
-W1 = np.array([[rnd.uniform(-1.0,1.0) for i in range(SIZE[0])] for j in range(SIZE[1])])  
-W2 = np.array([[rnd.uniform(-1.0,1.0) for i in range(SIZE[1])] for j in range(SIZE[2])])  
-W3 = np.array([[rnd.uniform(-1.0,1.0) for i in range(SIZE[2])] for j in range(SIZE[3])])  
-  
-B1 = np.array([rnd.uniform(-1.0,1.0) for _ in range(SIZE[1])])
-B2 = np.array([rnd.uniform(-1.0,1.0) for _ in range(SIZE[2])])
-B3 = np.array([rnd.uniform(-1.0,1.0) for _ in range(SIZE[3])])
-"""
+W1 = np.random.randn(SIZE[1], SIZE[0]) * np.sqrt(2.0 / SIZE[0])
+W2 = np.random.randn(SIZE[2], SIZE[1]) * np.sqrt(2.0 / SIZE[1])
+W3 = np.random.randn(SIZE[3], SIZE[2]) * np.sqrt(2.0 / SIZE[2])
+B1 = np.zeros(SIZE[1])
+B2 = np.zeros(SIZE[2])
+B3 = np.zeros(SIZE[3])
 
-data = np.load("diabetes_parameters.npz")
-
-W1 = data["W1"]
-W2 = data["W2"]
-W3 = data["W3"]
-
-B1 = data["B1"]
-B2 = data["B2"]
-B3 = data["B3"]
+try:
+	data = np.load("diabetes_parameters.npz")
+	
+	W1 = data["W1"]
+	W2 = data["W2"]
+	W3 = data["W3"]
+	
+	B1 = data["B1"]
+	B2 = data["B2"]
+	B3 = data["B3"]
+except Exception:
+	print("file doesn't exist")
 
 #dataset  
 
@@ -40,7 +40,7 @@ for col in non_zero_cols:
     median = np.median(col_values[col_values != 0])
     col_values[col_values == 0] = median
 
-normalisation_vector = [4.0, 90.0, 80.0, 20.0, 85.0, 22.0, 0.25, 25.0, 1.0]
+normalisation_vector = dataset[:, :9].max(axis=0)
 for i in range(len(dataset)):
   dataset[i] /= normalisation_vector
   
@@ -115,29 +115,20 @@ def train_loop(start,end):
 		train_labels = dataset[i][8]
 		z1,a1,z2,a2,z3,a3 = forward_pass(input_layer)  
 		backpropagation(input_layer,one_hot(train_labels),z1,a1,z2,a2,z3,a3)
-		avg_loss += loss(a3,one_hot(train_labels))
-		avg_loss /= (i if i > 0 else 1)
-		
-		if i%10 == 0:  
-			
-			print(avg_loss)  
-			print(i)
-	np.savez(
-    "diabetes_parameters.npz",
-    W1=W1, W2=W2, W3=W3,
-    B1=B1, B2=B2, B3=B3
-)
+		avg_loss += loss(a3, one_hot(train_labels))
+	
+	avg_loss /= (end - start)
+	print(avg_loss)
 	  
 lr = 0.01
 
-for i in range(15):
+for i in range(500):
+	np.random.shuffle(dataset)
 	train_loop(1,768)
-	data = np.load("diabetes_parameters.npz")
+	print(i)
 
-	W1 = data["W1"]
-	W2 = data["W2"]
-	W3 = data["W3"]
-
-	B1 = data["B1"]
-	B2 = data["B2"]
-	B3 = data["B3"]
+np.savez(
+    "diabetes_parameters.npz",
+    W1=W1, W2=W2, W3=W3,
+    B1=B1, B2=B2, B3=B3, normalisation_vector = normalisation_vector)
+	
