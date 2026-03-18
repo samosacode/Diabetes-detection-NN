@@ -1,2 +1,2 @@
-# Diabetes Detection Neural network 
-this is a project that can help in detection of diabetes. This may not be accurate, so kindly double check.
+# This is a Neural network that can detect diabetes.
+this is a free to use open source repo. You can use this for anything.
