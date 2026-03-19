@@ -19,9 +19,9 @@ def activation(x):
 	return np.maximum(0,x)  
 	  
 def softmax(x):
-	T = np.random.uniform(0.2,1.2)
+	T = 0.8
 	x = x - np.max(x)
-	return np.exp(x - T) / np.sum(np.exp(x - T))  
+	return np.exp(x / T) / np.sum(np.exp(x / T))  
   
 def forward_pass(I):  
 	Z1 = W1 @ I + B1  
@@ -33,7 +33,7 @@ def forward_pass(I):
 	return A3 #uhh... 
 
 pregnancies = min(int(input("pregnancies: ")), 15)
-glucose = min(int(input("glucose (mg/dL): ")), 120)
+glucose = min(int(input("glucose (mg/dL): ")), 130)
 blood_pressure = min(int(input("diastolic blood pressure (mm Hg): ")), 100)
 skin_thickness = min(int(input("tricep skin fold thickness (mm): ")), 35)
 insulin = min(int(input("insulin (μU/mL): ")), 70)
