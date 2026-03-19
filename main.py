@@ -1,7 +1,7 @@
 import numpy as np  
   
 #stuff needed   
-SIZE = [8,32,32,2]  
+SIZE = [8,16,16,2]  
 
 data = np.load("diabetes_parameters.npz")
 
@@ -31,14 +31,14 @@ def forward_pass(I):
 	A3 = softmax(Z3)  
 	return A3 #uhh... 
 
-pregnancies = int(input("pregnancies: "))
-glucose = int(input("glucose (mg/dL): "))
-blood_pressure = int(input("diastolic blood pressure (mm Hg): "))
-skin_thickness = int(input("tricep skin fold thickness (mm): "))
-insulin = int(input("insulin (μU/mL): "))
-bmi = float(input("BMI: "))
-pedigree = float(input("diabetes pedigree function: "))
-age = int(input("age: "))
+pregnancies = min(int(input("pregnancies: ")), 15)
+glucose = min(int(input("glucose (mg/dL): ")), 199)
+blood_pressure = min(int(input("diastolic blood pressure (mm Hg): ")), 150)
+skin_thickness = min(int(input("tricep skin fold thickness (mm): ")), 50)
+insulin = min(int(input("insulin (μU/mL): ")), 100)
+bmi = min(float(input("BMI: ")), 60)
+pedigree = min(float(input("diabetes pedigree function: ")), 5)
+age = min(int(input("age: ")), 100)
 
 dataset = np.array([pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, pedigree, age])
 

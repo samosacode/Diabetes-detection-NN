@@ -3,7 +3,7 @@ import struct
 import random as rnd  
   
 #stuff needed   
-SIZE = [8,32,32,2]  
+SIZE = [8,16,16,2]  
 
 W1 = np.random.randn(SIZE[1], SIZE[0]) * np.sqrt(2.0 / SIZE[0])
 W2 = np.random.randn(SIZE[2], SIZE[1]) * np.sqrt(2.0 / SIZE[1])
@@ -40,7 +40,7 @@ for col in non_zero_cols:
     median = np.median(col_values[col_values != 0])
     col_values[col_values == 0] = median
 
-normalisation_vector = dataset[:, :9].max(axis=0)
+normalisation_vector = dataset[:, :9].max(axis=0) * [0.5,3.5,1.0,0.6,1.5,1.7,1.2,0.3,1]
 for i in range(len(dataset)):
   dataset[i] /= normalisation_vector
   
@@ -120,11 +120,11 @@ def train_loop(start,end):
 	avg_loss /= (end - start)
 	print(avg_loss)
 	  
-lr = 0.01
+lr = 0.001
 
-for i in range(500):
+for i in range(1000):
 	np.random.shuffle(dataset)
-	train_loop(1,768)
+	train_loop(0,768)
 	print(i)
 
 np.savez(
